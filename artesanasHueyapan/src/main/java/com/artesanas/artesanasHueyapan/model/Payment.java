@@ -12,16 +12,6 @@ public class Payment {
     private String date;
     private String paymentMethod;
 
-    public Payment(Integer total, String date, String paymentMethod) {
-        this.total = total;
-        this.date = date;
-        this.paymentMethod = paymentMethod;
-    }
-
-    public Payment() {
-
-    }
-
     public Long getIdPayment() {
         return idPayment;
     }

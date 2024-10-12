@@ -2,9 +2,9 @@ package com.artesanas.artesanasHueyapan.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.artesanas.artesanasHueyapan.model.Payment;
+import com.artesanas.artesanasHueyapan.model.Address;
 
 @Repository
-public interface PaymentRepository extends JpaRepository <Payment, Long>{   
+public interface AddressRepository extends JpaRepository<Address, Long>{
+
 }
