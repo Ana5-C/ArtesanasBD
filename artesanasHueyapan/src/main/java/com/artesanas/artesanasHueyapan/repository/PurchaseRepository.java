@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.artesanas.artesanasHueyapan.model.Product;
+import com.artesanas.artesanasHueyapan.model.Purchase;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface PurchaseRepository extends JpaRepository<Buy, Long> {
 
 }
