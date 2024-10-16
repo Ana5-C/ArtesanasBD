@@ -9,5 +9,4 @@ public class ArtesanasHueyapanApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ArtesanasHueyapanApplication.class, args);
 	}
-
 }
