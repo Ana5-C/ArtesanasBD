@@ -1,18 +1,28 @@
 package com.artesanas.artesanasHueyapan.model;
 
-import jakarta.persistence.*;;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "shipping")
 public class Shipping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotBlank(message = "The content must not be null and must contain at least one non-whitespace character")
+    @Size(min = 1, max = 100, message = "The content must be at most 500 characters, and has at least one character")
+    @Column(name = "nombre")
+    @JsonProperty("nombre")
     private Long idShipping;
     private String parcel;
     private String trackingNumber;
 
     @ManyToOne
-    @JoinColumn(name = "id_address")
+    @JoinColumn(name = "id_address", referencedColumnName = "nombre")
+    @JsonBackReference
     private Address address;
 
     public Long getIdShipping() {
@@ -52,6 +62,10 @@ public class Shipping {
         return "Shipping [idShipping=" + idShipping + ", parcel=" + parcel + ", trackingNumber=" + trackingNumber
                 + ", address=" + address + "]";
     }
+    
+
+
+
 
     
 }
