@@ -9,16 +9,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
-   /* @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<?>handleException(NoSuchElementException e){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The information is not registered");
+
+    /*@ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<?> handleException(NoSuchElementException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("record not found");
     }*/
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleException(NoSuchElementException e){
-        return new ResponseEntity<>("The requested item is not registered", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("record not found", HttpStatus.OK);
     }
-
-
 }
