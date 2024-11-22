@@ -15,12 +15,22 @@ public class ExceptionHandlerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("record not found");
     }*/
 
-    @ExceptionHandler(NoSuchElementException.class)
+    /* @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleException(NoSuchElementException e){
         return new ResponseEntity<>("record not found", HttpStatus.OK);
+    } */
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<?> handleException(NoSuchElementException e) {
+        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested item is not registered");
+        return new ResponseEntity<>("The requested item is not registered", HttpStatus.NOT_FOUND);
     }
 
-
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleException(IllegalArgumentException e) {
+        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The requested item is not registered");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
 }

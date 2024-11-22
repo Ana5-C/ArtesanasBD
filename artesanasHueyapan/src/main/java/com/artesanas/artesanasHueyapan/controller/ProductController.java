@@ -1,9 +1,12 @@
 package com.artesanas.artesanasHueyapan.controller;
 
-import java.net.URI;
-import java.util.Optional;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,67 +16,72 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-import com.artesanas.artesanasHueyapan.repository.ProductRepository;
-import com.artesanas.artesanasHueyapan.model.Product;
 
-@CrossOrigin(origins = "http://localhost:3000/")
+import com.artesanas.artesanasHueyapan.dto.ProductCartDTO;
+import com.artesanas.artesanasHueyapan.dto.ProductRequestDTO;
+import com.artesanas.artesanasHueyapan.model.Cart;
+import com.artesanas.artesanasHueyapan.model.Product;
+import com.artesanas.artesanasHueyapan.model.ProductCart;
+import com.artesanas.artesanasHueyapan.services.CartService;
+import com.artesanas.artesanasHueyapan.services.ProductService;
+
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
+        RequestMethod.PUT })
 public class ProductController {
+    @Autowired
+    private ProductService productService;
+
 
     @Autowired
-    private ProductRepository productRepository;
+    private ModelMapper modelMapper;
 
-    // Get all products (READ)
+    //encuentra todos
+    /* @Operation(summary = "Get all product")
     @GetMapping
-    public ResponseEntity<Iterable<Product>> findAll() {
-        return ResponseEntity.ok(productRepository.findAll());
-    }
+    public List<Product> getAll() {
+        return productService.getAll();
+    } */
 
-    // Get product by ID (READ)
+    // encuentra por ID
+    @Operation(summary = "Get a cart by ID")
     @GetMapping("/{idProduct}")
-    public ResponseEntity<Product> findById(@PathVariable Long idProduct) {
-        Optional<Product> productOptional = productRepository.findById(idProduct);
-        if (productOptional.isPresent()) {
-            return ResponseEntity.ok(productOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Product> findByIdProduct(@PathVariable Long idProduct) {
+        return new ResponseEntity<Product>(productService.getByIdProduct(idProduct), HttpStatus.OK);
     }
 
-    // Create a new product (CREATE)
+    // crea un producto
+    @Operation(summary = "Register a new product")
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Product newProduct, UriComponentsBuilder ucb) {
-        Product savedProduct = productRepository.save(newProduct);
-        URI uri = ucb
-                .path("/product/{idProduct}")
-                .buildAndExpand(savedProduct.getIdProduct())
-                .toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<ProductRequestDTO> add(
+        @RequestBody ProductRequestDTO productRequestDTO) {
+            ProductRequestDTO savedProductRequestDTO = convertToDTO(productService.save(convertToEntity(productRequestDTO)));
+            return new ResponseEntity<ProductRequestDTO>(savedProductRequestDTO, HttpStatus.CREATED);
     }
 
-    // Update a product (UPDATE)
+    public Product convertToEntity(ProductRequestDTO productRequestDTO) {
+        return modelMapper.map(productRequestDTO, Product.class);  
+    }
+
+    private ProductRequestDTO convertToDTO(Product product){
+        return modelMapper.map(product, ProductRequestDTO.class);
+    }
+
     @PutMapping("/{idProduct}")
-    public ResponseEntity<Void> update(@PathVariable Long idProduct, @RequestBody Product updatedProduct) {
-        Optional<Product> previousProduct = productRepository.findById(idProduct);
-        if (previousProduct.isPresent()) {
-            updatedProduct.setIdProduct(previousProduct.get().getIdProduct());
-            productRepository.save(updatedProduct);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<?> update(@RequestBody Product product, @PathVariable Long idProduct) {
+        Product auxProduct = productService.getByIdProduct(idProduct);
+        product.setIdProduct(auxProduct.getIdProduct());
+        return new ResponseEntity<String>("Updated", HttpStatus.OK);
     }
 
-    // Delete a product (DELETE)
     @DeleteMapping("/{idProduct}")
-    public ResponseEntity<Void> delete(@PathVariable Long idProduct) {
-        Optional<Product> product = productRepository.findById(idProduct);
-        if (product.isPresent()) {
-            productRepository.deleteById(idProduct);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<?> delete(@PathVariable Long idProduct){
+        productService.delete(idProduct);
+        return new ResponseEntity<String>("Delete", HttpStatus.OK);
     }
 }

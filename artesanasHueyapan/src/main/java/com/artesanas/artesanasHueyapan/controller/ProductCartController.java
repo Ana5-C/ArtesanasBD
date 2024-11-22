@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/productCart")
+@RequestMapping("/productsCarts")
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
         RequestMethod.PUT })
 @Tag(name = "Product Cart", description = "provides methods")
@@ -43,42 +43,5 @@ public class ProductCartController {
     @GetMapping
     public List<ProductCart> getAll() {
         return productCartService.getAll();
-    }
-
-    @Operation(summary = "Get a product cart by ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product cart found", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ProductCart.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Invalid ID", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Product cart not found", content = @Content)
-    })
-    @GetMapping("/{idProductCart}")
-    public ResponseEntity<?> getByIdProductCart(@PathVariable Long idProductCart) {
-        ProductCart productCart = productCartService.getByProductCart(idProductCart);
-        return new ResponseEntity<ProductCart>(productCart, HttpStatus.OK);
-    }
-
-    @Operation(summary = "Register a new product cart")
-    @PostMapping
-    public ResponseEntity<?> created(@RequestBody ProductCart productCart) {
-        productCartService.save(productCart);
-        return new ResponseEntity<String>("save", HttpStatus.OK);
-    }
-
-    @Operation(summary = "Update a product cart")
-    @PutMapping("/{idProductCart}")
-    public ResponseEntity<?> update(@RequestBody ProductCart productCart, @PathVariable Long idProductCart) {
-        ProductCart auxProductCart = productCartService.getByProductCart(idProductCart);
-        productCart.setIdProductCart(auxProductCart.getIdProductCart());
-        productCartService.save(productCart);
-        return new ResponseEntity<String>("updated", HttpStatus.OK);
-    }
-
-    @Operation(summary = "Delete a product cart")
-    @DeleteMapping("/{idProductCart}")
-    public ResponseEntity<?> delete(@PathVariable Long idProductCart) {
-        productCartService.delete(idProductCart);
-        return new ResponseEntity<String>("Deleted", HttpStatus.OK);
     }
 }

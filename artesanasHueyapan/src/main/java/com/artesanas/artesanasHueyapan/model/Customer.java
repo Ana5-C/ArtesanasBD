@@ -1,6 +1,7 @@
 package com.artesanas.artesanasHueyapan.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
@@ -19,41 +20,43 @@ public class Customer {
     private Long idCustomer;
     @NotBlank(message = "The content not be blank")
     @Size(min = 1, max = 50, message = "The content must be at most 50")
-    @Column(name = "name")
-    @JsonProperty("name")
+    @Column(name = "nombre")
+    @JsonProperty("nombre")
     private String name;
+
     @NotBlank(message = "The content not be blank")
     @Size(min = 1, max = 50, message = "The content must be at most 50")
-    @Column(name = "lastName")
-    @JsonProperty("lastName")
+    @Column(name = "apellidos")
+    @JsonProperty("apellidos")
     private String lastName;
 
     @NotBlank(message = "The content not be blank")
     @Size(min = 1, max = 50, message = "The content must be at most 50")
-    @Column(name = "email")
-    @JsonProperty("email")
+    @Column(name = "correo")
+    @JsonProperty("correo")
     private String email;
 
     @NotBlank(message = "The content not be blank")
-    @Size(min = 1, max = 8, message = "The content must be at most 8")
-    @Column(name = "userName")
-    @JsonProperty("userName")
+    @Size(min = 1, max = 16, message = "The content must be at most 8")
+    @Column(name = "nombreUsuario")
+    @JsonProperty("nombreUsuario")
     private String userName;
 
     @NotBlank(message = "The content not be blank")
-    @Size(min = 1, max = 8, message = "The content must be at most 8")
-    @Column(name = "password")
-    @JsonProperty("password")
+    @Size(min = 1, max = 16, message = "The content must be at most 8")
+    @Column(name = "contrasena")
+    @JsonProperty("contrasena")
     private String password;
 
     /*
      * One-to-one relationship with the Customer entity.
      * A cart belongs to a customer.
      */
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    // used to avoid recursion when serializing
-    @JsonBackReference
-    private Cart cart;
+    // @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // // used to avoid recursion when serializing
+    // //@JsonManagedReference
+    // @JsonBackReference
+    // private Cart cart;
 
     // Methods Getters y Setters
     public Long getIdCustomer() {
@@ -104,19 +107,19 @@ public class Customer {
         this.password = password;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
+    // public Cart getCart() {
+    //     return cart;
+    // }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
+    // public void setCart(Cart cart) {
+    //     this.cart = cart;
+    // }
 
     // returns a string representation of the object
     @Override
     public String toString() {
         return "Customer [idCustomer=" + idCustomer + ", name=" + name + ", lastName=" + lastName + ", email=" + email
-                + ", userName=" + userName + ", password=" + password + ", cart=" + cart + "]";
+                + ", userName=" + userName + ", password=" + password + "]";
     }
 
 }

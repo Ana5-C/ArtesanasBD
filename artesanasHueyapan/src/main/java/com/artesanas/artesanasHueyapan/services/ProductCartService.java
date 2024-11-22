@@ -23,12 +23,4 @@ public class ProductCartService {
     public void save(ProductCart productCart){
         productCartRepository.save(productCart);
     }
-
-    public ProductCart getByProductCart(Long idProductCart){
-        return productCartRepository.findById(idProductCart).get();
-    }
-    
-    public void delete(Long idProductCart){
-        productCartRepository.deleteById(idProductCart);
-    }
 }

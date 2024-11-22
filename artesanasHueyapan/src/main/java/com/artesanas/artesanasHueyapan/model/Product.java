@@ -1,89 +1,64 @@
 package com.artesanas.artesanasHueyapan.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProduct;
+    @NotBlank(message = "The content not be blank")
+    @Size(min = 1, max = 50, message = "The content must be at most 50")
+    @Column(name = "name")
+    @JsonProperty("name")
     private String name;
+    @NotBlank(message = "The content not be blank")
+    @Size(min = 1, max = 1000, message = "The content must be at most 1000")
+    @Column(name = "description")
+    @JsonProperty("description")
     private String description;
-    private Long categoryId;
+
+    @NotNull(message = "Price must not be null")
+    @Positive(message = "Price must be positive")
+    @Column(name = "price")
+    @JsonProperty("price")
     private double price;
+
+    @NotNull(message = "Stock must not be null")
+    @Min(value = 0, message = "Stock must be zero or positive")
+    @Column(name = "stock")
+    @JsonProperty("stock")
     private Long stock;
 
-    // Default constructor
-    public Product() {
-    }
+    // // @OneToOne
+    // // @JoinColumn(name = "id_Category", referencedColumnName = "idCategory")
+    // // @JsonBackReference
+    // // private Category category;
 
-    // Constructor with essential fields
-    public Product(String name, String description, Long categoryId, double price, Long stock) {
-        this.name = name;
-        this.description = description;
-        this.categoryId = categoryId;
-        this.price = price;
-        this.stock = stock;
-    }
+    /*@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProductCart> productCart;*/
 
-    // Getter and Setter methods
-    public Long getIdProduct() {
-        return idProduct;
-    }
-
-    public void setIdProduct(Long idProduct) {
-        this.idProduct = idProduct;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public Long getStock() {
-        return stock;
-    }
-
-    public void setStock(Long stock) {
-        this.stock = stock;
-    }
-
-    // toString method for debugging
-    @Override
-    public String toString() {
-        return "Product [idProduct=" + idProduct + ", name=" + name + ", description=" + description +
-                ", categoryId=" + categoryId + ", price=" + price + ", stock=" + stock + "]";
-    }
+    
 }

@@ -1,7 +1,10 @@
 package com.artesanas.artesanasHueyapan.services;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.artesanas.artesanasHueyapan.model.Cart;
@@ -9,24 +12,38 @@ import com.artesanas.artesanasHueyapan.repository.CartRepository;
 import jakarta.transaction.Transactional;
 
 @Service
-@Transactional
 public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    public List<Cart> getAll(){
+    public List<Cart> getAll() {
         return cartRepository.findAll();
     }
 
-    public void save(Cart cart){
-        cartRepository.save(cart);
+    public List<Cart> getAll(int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        Page<Cart> cartPage = cartRepository.findAll(pageRequest);
+        return cartPage.getContent();
     }
 
-    public Cart getByIdCart(Long idCart){
+
+    @Transactional
+    public Cart save (Cart cart){
+        return cartRepository.save(cart);
+    }
+    /*public void save(Cart cart) {
+        cartRepository.save(cart);
+    }*/
+
+    public Cart getByIdCart(Long idCart) {
         return cartRepository.findById(idCart).get();
     }
 
-    public void delete(Long idCart){
+    public void delete(Long idCart) {
         cartRepository.deleteById(idCart);
+    }
+
+    public List<Cart> getCartByDate(String dateCreated){
+        return cartRepository.getCartByDateJPQL(dateCreated);
     }
 }
